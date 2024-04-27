@@ -1,0 +1,115 @@
+  
+  
+  
+  // CRUD Operations
+
+  // Create or Add Member
+  if(isset($_POST['add_member'])) {
+      $fullname = $_POST['fullname'];
+      $gender = $_POST['gender'];
+      $age = $_POST['age'];
+      $purok = $_POST['purok'];
+      $address = $_POST['address'];
+      $timein = $_POST['timein'];
+      $timeout = $_POST['timeout'];
+      $service = $_POST['service'];
+  
+      $sql = "INSERT INTO members (fullname, gender, age, purok, address, timein, timeout, service) 
+              VALUES ('$fullname', '$gender', '$age', '$purok', '$address', '$timein', '$timeout', '$service')";
+      if (mysqli_query($conn, $sql)) {
+          echo "Member added successfully";
+      } else {
+          echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+      }
+  }
+  
+  // Read or Display Members
+  $sql = "SELECT * FROM members";
+  $result = mysqli_query($conn, $sql);
+  
+  // Update Member
+  if(isset($_POST['update_member'])) {
+      $id = $_POST['id'];
+      $fullname = $_POST['fullname'];
+      $gender = $_POST['gender'];
+      $age = $_POST['age'];
+      $purok = $_POST['purok'];
+      $address = $_POST['address'];
+      $timein = $_POST['timein'];
+      $timeout = $_POST['timeout'];
+      $service = $_POST['service'];
+  
+      $sql = "UPDATE members SET fullname='$fullname', gender='$gender', age='$age', purok='$purok', 
+              address='$address', timein='$timein', timeout='$timeout', service='$service' WHERE id='$id'";
+  
+      if (mysqli_query($conn, $sql)) {
+          echo "Member updated successfully";
+      } else {
+          echo "Error updating member: " . mysqli_error($conn);
+      }
+  }
+  
+  // Delete Member
+  if(isset($_GET['delete_member'])) {
+      $id = $_GET['delete_member'];
+      $sql = "DELETE FROM members WHERE id='$id'";
+      if (mysqli_query($conn, $sql)) {
+          echo "Member deleted successfully";
+      } else {
+          echo "Error deleting member: " . mysqli_error($conn);
+      }
+  }
+  
+  ?>
+  
+  <!-- Add Member Form -->
+  <h2>Add Member</h2>
+  <form method="POST" action="">
+      <input type="text" name="fullname" placeholder="Full Name" required><br>
+      <input type="text" name="gender" placeholder="Gender" required><br>
+      <input type="number" name="age" placeholder="Age" required><br>
+      <input type="text" name="purok" placeholder="Purok" required><br>
+      <input type="text" name="address" placeholder="Address" required><br>
+      <input type="time" name="timein" placeholder="Time In" required><br>
+      <input type="time" name="timeout" placeholder="Time Out" required><br>
+      <input type="text" name="service" placeholder="Service" required><br>
+      <button type="submit" name="add_member" class="btn btn-primary">Add Member</button>
+  </form>
+
+  <!-- Display Members -->
+  <h2>Members List</h2>
+  <table class="table">
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Purok</th>
+              <th>Address</th>
+              <th>Time In</th>
+              <th>Time Out</th>
+              <th>Service</th>
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody>
+          <?php
+          while($row = mysqli_fetch_assoc($result)) {
+              echo "<tr>";
+              echo "<td>".$row['id']."</td>";
+              echo "<td>".$row['fullname']."</td>";
+              echo "<td>".$row['gender']."</td>";
+              echo "<td>".$row['age']."</td>";
+              echo "<td>".$row['purok']."</td>";
+              echo "<td>".$row['address']."</td>";
+              echo "<td>".$row['timein']."</td>";
+              echo "<td>".$row['timeout']."</td>";
+              echo "<td>".$row['service']."</td>";
+              echo "<td><a href='edit_member.php?id=".$row['id']."' class='btn btn-primary'>Edit</a> 
+                      <a href='?delete_member=".$row['id']."' class='btn btn-danger'>Delete</a></td>";
+              echo "</tr>";
+          }
+          ?>
+      </tbody>
+  </table>
